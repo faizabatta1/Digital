@@ -1,0 +1,44 @@
+`timescale 1ns / 1ns
+module SR_tb;
+  
+reg CLK, Reset, enable;
+reg [3:0] X;
+reg [19:0] D;
+
+wire [19:0] Q;
+
+ SearchAndReverse UUT (.CLK(CLK),.Reset(Reset),.enable(enable),
+.X(X), .D(D),.Q(Q));
+ integer  cl;
+ 
+  initial begin
+    CLK=0;
+    for(cl=0;cl<200;cl++)
+     #3 CLK=~CLK;
+  end
+  
+  
+initial begin
+  $dumpfile("dump.vcd");
+   $dumpvars;
+  
+  
+   #3 Reset =1;
+   X= 4'b0000;
+   D= 20'b00000000000000000000;
+  
+   #3 Reset = 0;enable=0;
+
+#3 D= 20'b10101010101010101010; X= 4'b1010; enable=1;
+
+ #3 D= 20'b10101010101010101010; X= 4'b0101; enable=0;
+  
+  #3 D= 20'b11111111111111111111; X= 4'b0000; enable=1;
+  
+  #3 D= 20'b00001111000011110001; X= 4'b0011; enable=1;
+#10$stop;
+
+
+end
+
+endmodule
